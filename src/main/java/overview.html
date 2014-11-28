@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+</head>
+<body bgcolor="white">
+
+    <h3>Java RBroker Framework ~ Simple R Integration for Java Application Developers</h3>
+
+<p>
+    The Java RBroker Framework exposes a high-level programming model for building DeployR-enabled client applications. By using the RBroker Framework an application developer can focus entirely on integrating R Analytics, while offloading the complexity of managing client-side API task queues and server-side R session lifecycles.
+
+<p>
+The basic programming model for working with the framework is as follows:
+
+<p>
+<ol>
+    <li>Decide if the R Analytics tasks for your application should execute as:
+    <p>
+    <ol>
+        <li>
+        <i>Discrete tasks:</i> authentication optional, grid resources allocated
+at runtime, results returned immediately, no persistence. Good for 
+prototyping and public facing production deployments.
+        </li><br/>
+        <li>
+        <i>Pooled tasks:</i> authentication required, grid resources pre-allocated,
+results returned immediately, optional persistence to repository. Good for enterprise
+production deployments, consistent runtime, high-throughput environments.
+        </li><br/>
+        <li>
+        <i>Background tasks:</i> authentication required, grid resources allocated at runtime,
+results persisted for later retrieval. Good for periodic, scheduled or batch processing.
+        </li><br/>
+    </ol>
+    <li>
+Use the RBrokerFactory to create an appropriate instance of RBroker.
+    </li>
+    <p>
+    <li>
+Use the RTaskFactory to create one or more RTask for your application.
+    </li>
+    <p>
+    <li>
+Submit your RTask to RBroker for execution.
+    </li>
+    <p>
+    <li>
+Track the progress of your RTask using RTaskToken.
+    </li>
+    <p>
+    <li>
+Integrate the results of your RTask found within RTaskResult.
+    </li>
+</ol>
+
+<p>
+This programming model can be further simplified for application developers by leveraging asynchronous callbacks. Simply register an {@link com.revo.deployr.client.broker.RTaskListener} with your {@link com.revo.deployr.client.broker.RBroker} instance and the RBroker will automatically notify your application when each {@link com.revo.deployr.client.broker.RTask} completes. This approach allows your application to skip step 5. above and scale effortlessly.
+<p>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: '../build/libs', include: ['*.jar'])
+    compile "com.revolutionanalytics.deployr:jDeployR:7.3.0"
+}
+
+jar {
+    baseName = 'jRBroker'
+    version =  '7.3.0'
+}
+
+javadoc {
+    title = "DeployR 7.3.0 Java RBroker Framework"
+    options.overview = "src/main/java/overview.html"
+    exclude "com/revo/deployr/client/factory/RClientFactory.java"
+    exclude "com/revo/deployr/client/broker/task/**/*.java"
+    exclude "com/revo/deployr/client/broker/worker/**/*.java"
+    exclude "com/revo/deployr/client/broker/engine/**/*.java"
+    exclude "com/revo/deployr/client/broker/impl/**/*.java"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
