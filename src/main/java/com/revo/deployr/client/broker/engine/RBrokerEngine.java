@@ -464,7 +464,7 @@ public abstract class RBrokerEngine implements RBroker {
                     /*
                      * Await next queued Task.
                      */
-                    boolean priorityTaskAvailable = true;
+                    boolean priorityTaskAvailable = false;
                     while (nextTaskInQueue == null &&
                             taskBrokerIsActive.get()) {
 
@@ -474,10 +474,11 @@ public abstract class RBrokerEngine implements RBroker {
                          */
 
                         nextTaskInQueue = pendingHighPriorityQueue.peek();
-
-                        if (nextTaskInQueue == null) {
+                        if(nextTaskInQueue == null) {
                             nextTaskInQueue = pendingLowPriorityQueue.peek();
                             priorityTaskAvailable = false;
+                        } else {
+                            priorityTaskAvailable = true;
                         }
 
                         if (nextTaskInQueue == null) {
