@@ -12,7 +12,6 @@
  */
 package com.revo.deployr.client.broker.task;
 
-import com.revo.deployr.client.broker.RTask;
 import com.revo.deployr.client.broker.options.BackgroundTaskOptions;
 
 import java.net.URL;
@@ -22,7 +21,7 @@ import java.net.URL;
  * for execution on an
  * {@link com.revo.deployr.client.broker.RBroker}.
  */
-public class BackgroundTask implements RTask {
+public class BackgroundTask extends AbstractTask {
 
     /*
      * Name and description properties describe the

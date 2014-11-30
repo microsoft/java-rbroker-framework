@@ -12,7 +12,6 @@
  */
 package com.revo.deployr.client.broker.task;
 
-import com.revo.deployr.client.broker.RTask;
 import com.revo.deployr.client.broker.options.DiscreteTaskOptions;
 
 import java.net.URL;
@@ -22,7 +21,7 @@ import java.net.URL;
  * for execution on an
  * {@link com.revo.deployr.client.broker.RBroker}.
  */
-public class DiscreteTask implements RTask {
+public class DiscreteTask extends AbstractTask {
 
     /*
      * Filename, directory, author and optional version

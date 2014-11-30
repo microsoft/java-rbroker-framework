@@ -12,7 +12,6 @@
  */
 package com.revo.deployr.client.broker.task;
 
-import com.revo.deployr.client.broker.RTask;
 import com.revo.deployr.client.broker.options.PooledTaskOptions;
 
 import java.net.URL;
@@ -22,7 +21,7 @@ import java.net.URL;
  * for execution on an
  * {@link com.revo.deployr.client.broker.RBroker}.
  */
-public class PooledTask implements RTask {
+public class PooledTask extends AbstractTask {
 
     /*
      * Code property represents a block of executable R code.

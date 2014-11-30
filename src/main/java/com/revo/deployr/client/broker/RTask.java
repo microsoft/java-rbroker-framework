@@ -18,4 +18,31 @@ package com.revo.deployr.client.broker;
  */
 public interface RTask {
 
+    /**
+     * Return RTask client application token.
+     *
+     * Tokens can be used to "tag" an RTask with a client application
+     * specific token. These tokens can be then be used by a client
+     * application when an RTask completes to decide how best to process
+     * or direct the RTaskResult.
+     *
+     * For example, if multiple "services" within a single application
+     * are using a single instance of RBroker, then each RTask submitted to
+     * that RBroker could be tagged with the name of the originating service.
+     */
+    Object getToken();
+
+    /**
+     * Set an RTask client application token.
+     *
+     * Tokens can be used to "tag" an RTask with a client application
+     * specific token. These tokens can be then be used by a client
+     * application when an RTask completes to decide how best to process
+     * or direct the RTaskResult.
+     *
+     * For example, if multiple "services" within a single application
+     * are using a single instance of RBroker, then each RTask submitted to
+     * that RBroker could be tagged with the name of the originating service.
+     */
+    void setToken(Object token);
 }
