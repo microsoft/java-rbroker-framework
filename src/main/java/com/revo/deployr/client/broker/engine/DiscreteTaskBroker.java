@@ -148,6 +148,7 @@ public class DiscreteTaskBroker extends RBrokerEngine {
                     source.version,
                     source.options);
         }
+        clone.setToken(source.getToken());
 
         return clone;
     }

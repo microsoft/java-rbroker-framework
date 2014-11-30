@@ -189,6 +189,8 @@ public class PooledTaskBroker extends RBrokerEngine {
         if (source.external != null) {
             clone.external = source.external;
         }
+        clone.setToken(source.getToken());
+
         return clone;
     }
 
