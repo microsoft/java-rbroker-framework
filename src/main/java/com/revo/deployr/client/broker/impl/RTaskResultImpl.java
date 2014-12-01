@@ -141,6 +141,13 @@ public class RTaskResultImpl implements RTaskResult {
      */
     public final long timeOnCall;
 
+    /**
+     * Task flag indicating task has been
+     * automatically resubmitted following failed
+     * task execution due to grid failure.
+    */
+    public boolean repeatTask = false;
+
     /*
      * RTaskResult interface methods.
      */

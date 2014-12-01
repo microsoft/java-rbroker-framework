@@ -17,6 +17,7 @@ import com.revo.deployr.client.broker.*;
 import com.revo.deployr.client.broker.app.RTaskAppSimulator;
 import com.revo.deployr.client.broker.config.PooledBrokerConfig;
 import com.revo.deployr.client.broker.config.RBrokerConfig;
+import com.revo.deployr.client.broker.impl.RTaskResultImpl;
 import com.revo.deployr.client.broker.impl.RTaskTokenImpl;
 import com.revo.deployr.client.broker.impl.RTaskTokenListener;
 import com.revo.deployr.client.broker.worker.RBrokerWorker;
@@ -26,6 +27,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /*
@@ -55,8 +57,8 @@ public abstract class RBrokerEngine implements RBroker {
     /*
      * Asynchronous RTask and RBroker listeners.
      */
-    private RTaskListener taskListener;
-    private RBrokerListener brokerListener;
+    protected RTaskListener taskListener;
+    protected RBrokerListener brokerListener;
 
     /*
      * RTask Application Simulator.
@@ -77,12 +79,12 @@ public abstract class RBrokerEngine implements RBroker {
     protected final AtomicBoolean refreshingConfig = new AtomicBoolean(false);
 
     protected RBrokerConfig brokerConfig;
-    protected int parallelTaskLimit;
+    protected AtomicInteger parallelTaskLimit;
     protected RClient rClient;
     protected RUser rUser;
     protected ExecutorService taskWorkerExecutor;
-    protected static int MAX_TASK_QUEUE_SIZE = 9999;
-    public long LIVE_TASK_TOKEN_PEEK_INTERVAL = 100L;
+    protected static int MAX_TASK_QUEUE_SIZE = 99999;
+    public long LIVE_TASK_TOKEN_PEEK_INTERVAL = 25L;
     protected ConcurrentHashMap<RTask, Object> taskResourceTokenMap;
     protected ConcurrentHashMap<RTask, RTaskTokenListener> taskTokenListenerMap;
 
@@ -119,7 +121,7 @@ public abstract class RBrokerEngine implements RBroker {
 
         try {
 
-            this.parallelTaskLimit = parallelTaskLimit;
+            this.parallelTaskLimit = new AtomicInteger(parallelTaskLimit);
 
             this.taskWorkerExecutor =
                     Executors.newFixedThreadPool(parallelTaskLimit);
@@ -286,7 +288,7 @@ public abstract class RBrokerEngine implements RBroker {
     }
 
     public int maxConcurrency() {
-        return this.parallelTaskLimit;
+        return this.parallelTaskLimit.get();
     }
 
     public RBrokerStatus status() {
@@ -295,10 +297,10 @@ public abstract class RBrokerEngine implements RBroker {
          * Pending tasks include all tasks on
          * high and low priority queues.
          */
-        int pendingTasks =
-                pendingHighPriorityQueue.size() + pendingLowPriorityQueue.size();
+        int pendingTasks = pendingHighPriorityQueue.size() +
+                pendingLowPriorityQueue.size();
         int executingTasks =
-                parallelTaskLimit - resourceTokenPool.size();
+                parallelTaskLimit.get() - resourceTokenPool.size();
 
         return new RBrokerStatus(pendingTasks,
                 executingTasks);
@@ -474,7 +476,7 @@ public abstract class RBrokerEngine implements RBroker {
                          */
 
                         nextTaskInQueue = pendingHighPriorityQueue.peek();
-                        if(nextTaskInQueue == null) {
+                        if (nextTaskInQueue == null) {
                             nextTaskInQueue = pendingLowPriorityQueue.peek();
                             priorityTaskAvailable = false;
                         } else {
@@ -578,7 +580,8 @@ public abstract class RBrokerEngine implements RBroker {
 
                 try {
 
-                    while (liveTaskTokens.size() == 0 && taskBrokerIsActive.get()) {
+                    while (liveTaskTokens.size() == 0 &&
+                            taskBrokerIsActive.get()) {
                         try {
                             Thread.currentThread().sleep(
                                     LIVE_TASK_TOKEN_PEEK_INTERVAL);
@@ -587,6 +590,8 @@ public abstract class RBrokerEngine implements RBroker {
                     }
 
                     for (RTaskToken rTaskToken : liveTaskTokens) {
+
+                        boolean repeatTaskFound = false;
 
                         if (rTaskToken.isDone()) {
 
@@ -600,17 +605,25 @@ public abstract class RBrokerEngine implements RBroker {
 
                                 if (taskListener != null) {
 
-                                    try {
-                                        taskListener.onTaskCompleted(
-                                                rTaskToken.getTask(), result);
-                                    } catch (Exception ontcx) {
-                                        /*
-                                         * RBrokerEngine onTaskCompleted is
-                                         * calling back into client application
-                                         * code. That code could erroneously
-                                         * throw an Exception back into
-                                         * RBrokerEngine. If so, swallow it.
-                                         */
+                                    if (((RTaskResultImpl) result).repeatTask) {
+                                        repeatTaskFound = true;
+                                    } else {
+
+                                        try {
+                                            taskListener.onTaskCompleted(
+                                                    rTaskToken.getTask(), result);
+                                        } catch (Exception ontcx) {
+                                            /*
+                                             * RBrokerEngine onTaskCompleted
+                                             * is * calling back into client
+                                             * application code. That code
+                                             * could erroneously throw an
+                                             * Exception back into
+                                             * RBrokerEngine. If so, swallow
+                                             * it.
+                                             */
+                                        }
+
                                     }
                                 }
 
@@ -639,12 +652,10 @@ public abstract class RBrokerEngine implements RBroker {
 
                             liveTaskTokens.remove(rTaskToken);
 
-                            tasksHandledOnLoop++;
-
-                            /*
-                             * 
-                             */
-                            updateBrokerStats(result);
+                            if (!repeatTaskFound) {
+                                tasksHandledOnLoop++;
+                                updateBrokerStats(result);
+                            }
 
                         }
 
@@ -703,5 +714,4 @@ public abstract class RBrokerEngine implements RBroker {
         private AtomicLong totalTaskTimeOnServer = new AtomicLong();
         private AtomicLong totalTaskTimeOnCall = new AtomicLong();
     }
-
 }

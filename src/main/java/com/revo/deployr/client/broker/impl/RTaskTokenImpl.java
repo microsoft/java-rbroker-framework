@@ -52,7 +52,7 @@ public class RTaskTokenImpl implements RTaskToken {
         } else {
             while (future == null) {
                 try {
-                    Thread.currentThread().sleep(250);
+                    Thread.currentThread().sleep(25);
                 } catch (InterruptedException iex) {
                     throw iex;
                 }
