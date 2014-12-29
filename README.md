@@ -87,6 +87,9 @@ provided to demonstrate some of the key featues introduced by the
 for the Java client library. See
 [here](examples/tutorial) for details.
 
+The DeployR Java RBroker Framework also ships with a set of unit tests. See 
+[here](test) for details.
+
 License
 =======
 
