@@ -1,0 +1,22 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: '../build/libs', include: ['*.jar'])
+    compile "com.revolutionanalytics.deployr:jDeployR:7.3.0"
+    testCompile("junit:junit:4.10")
+}
+
+test {
+    systemProperty "connection.protocol", "http://"
+    systemProperty "connection.endpoint", "localhost:7300/deployr"
+    systemProperty "username", "testuser"
+    systemProperty "password", "changeme"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
