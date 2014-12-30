@@ -101,15 +101,46 @@ public abstract class RBrokerEngine implements RBroker {
      * uses com.revo.deployr.client.RProject.
      *
      * When an RTask completes the RBrokerWorker that executed
-     * the task is responsible for making  make a callback() on
+     * the task is responsible for making a callback() on
      * RBrokerEngine signaling that the resourceToken associated
      * with the RTask can be released back into the resourceTokenPool,
      * making the token available for use by another RTask to run.
      */
     protected ArrayBlockingQueue<Object> resourceTokenPool;
 
-    public RBrokerEngine(RBrokerConfig brokerConfig) {
+    public RBrokerEngine(RBrokerConfig brokerConfig) throws RBrokerException {
+
         this.brokerConfig = brokerConfig;
+
+        /*
+         * Validate DeployR server endpoint passed to RBroker.
+         */
+        try {
+            /*
+             * Test the /r/server/info endpoint, expect HTTP 200.
+             */
+            String serverInfoEndpoint = brokerConfig.deployrEndpoint +
+                                        "/r/server/info?format=json";
+            URLConnection urlConn =
+                (new URL(serverInfoEndpoint)).openConnection();
+
+            /*
+             * Make endpoint connection, catch handles failure.
+             */
+            try(InputStream is = urlConn.getInputStream()) {
+                /*
+                 * Use try-with-resource to ensure proper
+                 * cleanup regardless of outcome.
+                 */ 
+            }
+
+        } catch(Exception ex) {
+            /*
+             * Halt RBroker instance initialization,
+             * report invalid DeployR server endpoint.
+             */
+           throw new RBrokerException("DeployR endpoint invalid.", ex);
+        }
     }
 
     protected void initEngine(int parallelTaskLimit)
