@@ -20,6 +20,7 @@ import com.revo.deployr.client.*;
 import com.revo.deployr.client.factory.*;
 import com.revo.deployr.client.auth.basic.RBasicAuthentication;
 import org.junit.*;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -161,6 +162,7 @@ public class BackgroundTaskBrokerTest {
     public void testConfigAuthenticationGoodCredentials() {
 
         // Test variables.
+        String executionToken = "testConfigAuthenticationGoodCredentials";
         RBroker rBroker = null;
         RBasicAuthentication rAuth = null;
         BackgroundBrokerConfig config = null;
@@ -190,7 +192,7 @@ public class BackgroundTaskBrokerTest {
 
         if(rBroker != null) {
             try {
-                rTask = RTaskFactory.backgroundTask("testConfigAuthenticationGoodCredentials",
+                rTask = RTaskFactory.backgroundTask(executionToken,
                                                     "Background Task",
                                                     "Histogram of Auto Sales",
                                                     "root", "testuser", null, null);
@@ -338,7 +340,7 @@ public class BackgroundTaskBrokerTest {
 
         if(rBroker != null) {
             try {
-                rTask = RTaskFactory.backgroundTask("testTaskExecutionWithTokenStandardQueueGood",
+                rTask = RTaskFactory.backgroundTask(executionToken,
                                                     "Background Task",
                                                     "Histogram of Auto Sales",
                                                      "root", "testuser", null, null);
@@ -438,7 +440,7 @@ public class BackgroundTaskBrokerTest {
 
         if(rBroker != null) {
             try {
-                rTask = RTaskFactory.backgroundTask("testTaskExecutionWithTokenPriorityQueueGood",
+                rTask = RTaskFactory.backgroundTask(executionToken,
                                                     "Background Task",
                                                     "Histogram of Auto Sales",
                                                      "root", "testuser", null, null);
@@ -500,6 +502,144 @@ public class BackgroundTaskBrokerTest {
     }
 
     /**
+     * Test multiple "good" RTask executions distributed across
+     * the standard and priority task queues.
+     */
+    @Test
+    public void testMultipleTaskExecutionWithMixedPriority() {
+
+        // Test variables.
+        String executionToken = "testMultipleTaskExecutionWithMixedPriority";
+        RBroker rBroker = null;
+        RBasicAuthentication rAuth = null;
+        BackgroundBrokerConfig config = null;
+        List<RTask> rTasks = new ArrayList<RTask>();
+        List<RTaskToken> standardTaskTokens = new ArrayList<RTaskToken>();
+        List<RTaskToken> priorityTaskTokens = new ArrayList<RTaskToken>();
+        List<RTaskResult> rTaskResults = new ArrayList<RTaskResult>();
+        List<Boolean> jobResults = new ArrayList<Boolean>();
+
+        // Test error handling.
+        Exception exception = null;
+        String exceptionMsg = "";
+        Exception cleanupException = null;
+        String cleanupExceptionMsg = "";
+
+        // Test.
+        int multipleTaskTestSize = 10;
+        rAuth =
+            new RBasicAuthentication(System.getProperty("username"),
+                                     System.getProperty("password"));
+        config = new BackgroundBrokerConfig(endpoint, rAuth);
+
+        try {
+            rBroker = RBrokerFactory.backgroundTaskBroker(config);
+        } catch (Exception ex) {
+            exception = ex;
+            exceptionMsg = "RBrokerFactory.backgroundTaskBroker failed: ";
+        }
+
+        if(rBroker != null) {
+
+            for(int i=0; i<multipleTaskTestSize; i++) {
+                try {
+                    RTask rTask = RTaskFactory.backgroundTask(executionToken,
+                                                    "Background Task",
+                                                    "Histogram of Auto Sales",
+                                                     "root", "testuser", null, null);
+                    rTasks.add(rTask);
+                } catch (Exception ex) {
+                    exception = ex;
+                    exceptionMsg = "RTaskFactory.backgroundTask() failed: ";
+                    break;
+                }
+            }
+        }
+
+        boolean priorityTask = true;
+        for(RTask task : rTasks) {
+            try {
+                RTaskToken rTaskToken = rBroker.submit(task, priorityTask);
+                if(priorityTask)
+                    priorityTaskTokens.add(rTaskToken);
+                else
+                    standardTaskTokens.add(rTaskToken);
+
+                // Flip priority flag to altenate task type.
+                priorityTask = !priorityTask;
+            } catch (Exception ex) {
+                exception = ex;
+                exceptionMsg = "rBroker.submit(rTask, priorityTask) failed: ";
+            }
+        }
+
+        for(RTaskToken taskToken : priorityTaskTokens) {
+            try {
+                rTaskResults.add(taskToken.getResult());
+            } catch (Exception ex) {
+                exception = ex;
+                exceptionMsg = "Priority rTaskToken.getResult() failed: ";
+            }
+        }
+
+        for(RTaskToken taskToken : standardTaskTokens) {
+            try {
+                rTaskResults.add(taskToken.getResult());
+            } catch (Exception ex) {
+                exception = ex;
+                exceptionMsg = "Standard rTaskToken.getResult() failed: ";
+            }
+        }
+
+        for(RTaskResult result : rTaskResults) {
+
+            String jobID = result.getID();
+            boolean jobCompleted =
+                DeployRUtil.verifyJobExitStatus(rBroker.owner(),
+                                                jobID,
+                                                RJob.COMPLETED);
+            jobResults.add(jobCompleted);
+
+            // Test cleanup.
+            try {
+                DeployRUtil.deleteJobArtifacts(rBroker.owner(),
+                                               jobID);
+            } catch (Exception dex) {}
+        }
+
+        // Test cleanup.
+        try {
+            if (rBroker != null) {
+                rBroker.shutdown();
+            }
+        } catch (Exception ex) {
+            cleanupException = ex;
+            cleanupExceptionMsg = "rBroker.shutdown failed: ";
+        }
+
+        // Test asserts.
+        if (exception == null) {
+            assertEquals(rTasks.size(), multipleTaskTestSize);
+            assertEquals(standardTaskTokens.size() + priorityTaskTokens.size(),
+                                                        multipleTaskTestSize);
+            assertEquals(rTaskResults.size(), multipleTaskTestSize);
+            for(RTaskResult result : rTaskResults) {
+                assertTrue(result.isSuccess());
+            }
+            for(Boolean jobStatus : jobResults) {
+                assertTrue(jobStatus);
+            }
+        } else {
+            fail(exceptionMsg + exception.getMessage());
+        }
+
+        // Test cleanup errors.
+        if (cleanupException != null) {
+            fail(cleanupExceptionMsg + cleanupException.getMessage());
+        }
+    }
+
+    /**
      * Test "bad" repository-managed script based
      * RTask execution with execution-token.
      */
@@ -542,7 +682,7 @@ public class BackgroundTaskBrokerTest {
                  * Repository-managed script does not existe, will
                  * result in an execution error.
                  */
-                rTask = RTaskFactory.backgroundTask("testTaskExecutionWithTokenBadScript",
+                rTask = RTaskFactory.backgroundTask(executionToken,
                                                     "Background Task",
                                                     "This Script Does Not Exist",
                                                      "root", "testuser", null, null);
@@ -643,7 +783,7 @@ public class BackgroundTaskBrokerTest {
                  * R code block will result in a syntax
                  * error being raised by the R interpreter.
                  */
-                rTask = RTaskFactory.backgroundTask("testTaskExecutionWithTokenBadCode",
+                rTask = RTaskFactory.backgroundTask(executionToken,
                                                     "Background Task",
                                                     "x y", null);
                 rTask.setToken(executionToken);
@@ -708,6 +848,7 @@ public class BackgroundTaskBrokerTest {
     public void testTaskExecutionWithGoodOptions() {
 
         // Test variables.
+        String executionToken = "testTaskExecutionWithGoodOptions";
         RBroker rBroker = null;
         RBasicAuthentication rAuth = null;
         BackgroundBrokerConfig config = null;
@@ -740,7 +881,7 @@ public class BackgroundTaskBrokerTest {
             try {
                 BackgroundTaskOptions options =
                     DeployRUtil.createBackgroundTaskOptions(true);
-                rTask = RTaskFactory.backgroundTask("testTaskExecutionWithGoodOptions",
+                rTask = RTaskFactory.backgroundTask(executionToken,
                                                     "Background Task",
                                                     "Histogram of Auto Sales",
                                                      "root", "testuser", null, options);
@@ -806,6 +947,7 @@ public class BackgroundTaskBrokerTest {
     public void testTaskExecutionWithBadOptions() {
 
         // Test variables.
+        String executionToken = "testTaskExecutionWithBadOptions";
         RBroker rBroker = null;
         RBasicAuthentication rAuth = null;
         BackgroundBrokerConfig config = null;
@@ -838,7 +980,7 @@ public class BackgroundTaskBrokerTest {
             try {
                 BackgroundTaskOptions options =
                     DeployRUtil.createBackgroundTaskOptions(false);
-                rTask = RTaskFactory.backgroundTask("testTaskExecutionWithBadOptions",
+                rTask = RTaskFactory.backgroundTask(executionToken,
                                                     "Background Task",
                                                     "Histogram of Auto Sales",
                                                      "root", "testuser", null, options);

@@ -20,6 +20,7 @@ import com.revo.deployr.client.*;
 import com.revo.deployr.client.factory.*;
 import com.revo.deployr.client.auth.basic.RBasicAuthentication;
 import org.junit.*;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -568,6 +569,120 @@ public class DiscreteTaskBrokerTest {
             assertNotNull(rTaskResult);
             assertTrue(rTaskResult.isSuccess());
             assertEquals(rTaskToken.getTask().getToken(), executionToken);
+        } else {
+            fail(exceptionMsg + exception.getMessage());
+        }
+
+        // Test cleanup errors.
+        if (cleanupException != null) {
+            fail(cleanupExceptionMsg + cleanupException.getMessage());
+        }
+    }
+
+    /**
+     * Test multiple "good" RTask executions distributed across
+     * the standard and priority task queues.
+     */
+    @Test
+    public void testMultipleTaskExecutionWithMixedPriority() {
+
+        // Test variables.
+        String executionToken = "testMultipleTaskExecutionWithMixedPriority";
+        RBroker rBroker = null;
+        RBasicAuthentication rAuth = null;
+        DiscreteBrokerConfig config = null;
+        List<RTask> rTasks = new ArrayList<RTask>();
+        List<RTaskToken> standardTaskTokens = new ArrayList<RTaskToken>();
+        List<RTaskToken> priorityTaskTokens = new ArrayList<RTaskToken>();
+        List<RTaskResult> rTaskResults = new ArrayList<RTaskResult>();
+
+        // Test error handling.
+        Exception exception = null;
+        String exceptionMsg = "";
+        Exception cleanupException = null;
+        String cleanupExceptionMsg = "";
+
+        // Test.
+        int multipleTaskMaxConcurrency = 10;
+        int multipleTaskTestSize = 10;
+        config = new DiscreteBrokerConfig(endpoint, null, multipleTaskMaxConcurrency);
+
+        try {
+            rBroker = RBrokerFactory.discreteTaskBroker(config);
+        } catch (Exception ex) {
+            exception = ex;
+            exceptionMsg = "RBrokerFactory.discreteTaskBroker failed: ";
+        }
+
+        if(rBroker != null) {
+
+            for(int i=0; i<multipleTaskTestSize; i++) {
+                try {
+                    RTask rTask = RTaskFactory.discreteTask("Histogram of Auto Sales",
+                                             "root", "testuser", null, null);
+                    rTasks.add(rTask);
+                } catch (Exception ex) {
+                    exception = ex;
+                    exceptionMsg = "RTaskFactory.discreteTask failed: ";
+                    break;
+                }
+            }
+        }
+
+        boolean priorityTask = true;
+        for(RTask task : rTasks) {
+            try {
+                RTaskToken rTaskToken = rBroker.submit(task, priorityTask);
+                if(priorityTask)
+                    priorityTaskTokens.add(rTaskToken);
+                else
+                    standardTaskTokens.add(rTaskToken);
+
+                // Flip priority flag to altenate task type.
+                priorityTask = !priorityTask;
+            } catch (Exception ex) {
+                exception = ex;
+                exceptionMsg = "rBroker.submit(rTask, priorityTask) failed: ";
+            }
+        }
+
+        for(RTaskToken taskToken : priorityTaskTokens) {
+            try {
+                rTaskResults.add(taskToken.getResult());
+            } catch (Exception ex) {
+                exception = ex;
+                exceptionMsg = "Priority rTaskToken.getResult() failed: ";
+            }
+        }
+
+        for(RTaskToken taskToken : standardTaskTokens) {
+            try {
+                rTaskResults.add(taskToken.getResult());
+            } catch (Exception ex) {
+                exception = ex;
+                exceptionMsg = "Standard rTaskToken.getResult() failed: ";
+            }
+        }
+
+        // Test cleanup.
+        try {
+            if (rBroker != null) {
+                rBroker.shutdown();
+            }
+        } catch (Exception ex) {
+            cleanupException = ex;
+            cleanupExceptionMsg = "rBroker.shutdown failed: ";
+        }
+
+        // Test asserts.
+        if (exception == null) {
+            assertEquals(rTasks.size(), multipleTaskTestSize);
+            assertEquals(standardTaskTokens.size() + priorityTaskTokens.size(),
+                                                        multipleTaskTestSize);
+            assertEquals(rTaskResults.size(), multipleTaskTestSize);
+            for(RTaskResult result : rTaskResults) {
+                assertTrue(result.isSuccess());
+            }
         } else {
             fail(exceptionMsg + exception.getMessage());
         }
