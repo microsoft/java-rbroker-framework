@@ -611,7 +611,7 @@ public abstract class RBrokerEngine implements RBroker {
 
                 try {
 
-                    while (liveTaskTokens.size() == 0 &&
+                    while (liveTaskTokens.isEmpty() == 0 &&
                             taskBrokerIsActive.get()) {
                         try {
                             Thread.currentThread().sleep(
