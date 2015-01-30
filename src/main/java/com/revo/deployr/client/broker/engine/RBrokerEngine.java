@@ -240,23 +240,14 @@ public abstract class RBrokerEngine implements RBroker {
              */
             RTask clonedTask = cloneTask(task);
 
-            boolean added = false;
-            if (priority)
-                added = pendingHighPriorityQueue.offer(clonedTask);
-            else
-                added = pendingLowPriorityQueue.offer(clonedTask);
-
-            if (!added) {
-                throw new RBrokerException("Broker at capacity ( " +
-                        MAX_TASK_QUEUE_SIZE + " ), rejecting task " + clonedTask);
-            }
-
-            RTaskToken rTaskToken = new RTaskTokenImpl(task);
-
             /*
-             * RTask now on pending[High,Low]PriorityQueue,
-             * appending associated RTaskToken to end of
-             * liveTaskTokens.
+             * Prepare setup for RTaskToken.
+             */
+            RTaskToken rTaskToken = new RTaskTokenImpl(task);
+            /*
+             * Appending associated RTaskToken to end of
+             * liveTaskTokens in preparation for pushing
+             * RTask onto pending[High,Low]PriorityQueue.
              */
             liveTaskTokens.add(rTaskToken);
 
@@ -268,6 +259,33 @@ public abstract class RBrokerEngine implements RBroker {
              * on token.
              */
             taskTokenListenerMap.put(clonedTask, rTaskToken);
+
+            boolean added = false;
+            if (priority)
+                added = pendingHighPriorityQueue.offer(clonedTask);
+            else
+                added = pendingLowPriorityQueue.offer(clonedTask);
+
+            if (!added) {
+                
+                /*
+                 * Undo (above) setup for RTaskToken that was
+                 * rejected by pending[High,Low]PriorityQueues.
+                 */
+                boolean liveTaskTokenRemoved =
+                    liveTaskTokens.remove(rTaskToken);
+                Object clonedTaskRemoved =
+                    taskTokenListenerMap.remove(clonedTask);
+
+                if(!liveTaskTokenRemoved || clonedTaskRemoved == null) {
+                    System.out.println("RBrokerEngine: " +
+                        "Broker at capacity, rTask rejected, cleanup: " +
+                        liveTaskTokenRemoved + ", " + clonedTaskRemoved);
+                }
+
+                throw new RBrokerException("Broker at capacity ( " +
+                        MAX_TASK_QUEUE_SIZE + " ), rejecting task " + clonedTask);
+            }
 
             return rTaskToken;
 
