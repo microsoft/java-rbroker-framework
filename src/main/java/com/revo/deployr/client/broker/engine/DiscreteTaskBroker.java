@@ -96,7 +96,7 @@ public class DiscreteTaskBroker extends RBrokerEngine {
 
     public void callback(RTask task, RTaskResult result) {
 
-        Integer resourceToken = (Integer) taskResourceTokenMap.get(task);
+        Integer resourceToken = (Integer) taskResourceTokenMap.remove(task);
 
         if (resourceToken != null) {
             boolean added = resourceTokenPool.add(resourceToken);

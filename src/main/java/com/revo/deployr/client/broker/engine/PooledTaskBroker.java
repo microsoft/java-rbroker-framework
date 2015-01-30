@@ -140,7 +140,7 @@ public class PooledTaskBroker extends RBrokerEngine {
 
     public void callback(RTask task, RTaskResult result) {
 
-        RProject rProject = (RProject) taskResourceTokenMap.get(task);
+        RProject rProject = (RProject) taskResourceTokenMap.remove(task);
 
         /*
          * PooledTaskBroker DeployR Grid Fault Tolerance Handling.
