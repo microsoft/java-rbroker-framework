@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-applicationDefaultJvmArgs = ["-Dendpoint=http://localhost:7300/deployr",
+applicationDefaultJvmArgs = ["-Dendpoint=http://localhost:7400/deployr",
                              "-Dusername=testuser",
                              "-Dpassword=changeme"]
 
@@ -11,12 +11,12 @@ repositories {
 
 dependencies {
     compile fileTree(dir: '../../build/libs', include: ['*.jar'])
-    compile "com.revolutionanalytics.deployr:jDeployR:7.3.0"
+    compile "com.revolutionanalytics.deployr:jDeployR:7.4.0"
 }
 
 jar {
     baseName = 'rbroker-tutorial'
-    version =  '7.3.0'
+    version =  '7.4.0'
 }
 
 task execute(type:JavaExec) {
