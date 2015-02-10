@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 @Ignore
 public class DeployRUtil {
 
-    public static final String DEFAULT_PORT = "7300";
+    public static final String DEFAULT_PORT = "7400";
     public static final String BAD_ENDPOINT = "http://bad.end.point:999/deployr";
     public static final String BAD_SCRIPT_NAME = "DoesNotExist.R";
     public static final String BAD_DIR_NAME = "not-a-dir";

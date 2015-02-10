@@ -1,17 +1,20 @@
 apply plugin: 'java'
 
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     compile fileTree(dir: '../build/libs', include: ['*.jar'])
-    compile "com.revolutionanalytics.deployr:jDeployR:7.4.0"
+    compile "com.revolutionanalytics.deployr:jDeployR:7.4.1"
 }
 
 jar {
     baseName = 'jRBroker'
-    version =  '7.4.0'
+    version =  '7.4.1'
 }
 
 javadoc {
