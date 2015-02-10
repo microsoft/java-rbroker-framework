@@ -127,11 +127,16 @@ public abstract class RBrokerEngine implements RBroker {
             /*
              * Make endpoint connection, catch handles failure.
              */
-            try(InputStream is = urlConn.getInputStream()) {
-                /*
-                 * Use try-with-resource to ensure proper
-                 * cleanup regardless of outcome.
-                 */ 
+
+            InputStream is = null;
+            try {
+                is = urlConn.getInputStream();
+            } finally {
+                if(is != null) {
+                    try {
+                       is.close();
+                    } catch(java.io.IOException ioex) {}
+                }
             }
 
         } catch(Exception ex) {
@@ -144,11 +149,7 @@ public abstract class RBrokerEngine implements RBroker {
     }
 
     protected void initEngine(int parallelTaskLimit)
-            throws RClientException,
-            RSecurityException,
-            RDataException,
-            RGridException,
-            RBrokerException {
+            throws RBrokerException {
 
         try {
 
@@ -167,18 +168,8 @@ public abstract class RBrokerEngine implements RBroker {
                     new ConcurrentHashMap<RTask, RTaskTokenListener>(parallelTaskLimit);
 
         } catch (Exception ex) {
-
-            if (ex instanceof RClientException)
-                throw ex;
-            else if (ex instanceof RSecurityException)
-                throw ex;
-            else if (ex instanceof RDataException)
-                throw ex;
-            else if (ex instanceof RGridException)
-                throw ex;
-            else
-                throw new RBrokerException("Broker failed to " +
-                        "initialize, cause" + ex);
+            throw new RBrokerException("Broker failed to " +
+                    "initialize, cause" + ex);
         }
 
         try {
