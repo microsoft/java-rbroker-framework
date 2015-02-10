@@ -66,6 +66,8 @@ public class PooledTaskWorker implements RBrokerWorker {
              * Flag pooled task execution as phantom execution
              * to minimize server-side database resource usage.
              */
+            if(options == null)
+                options = new ProjectExecutionOptions();
             options.phantom = true;
 
             long startTime = System.currentTimeMillis();
