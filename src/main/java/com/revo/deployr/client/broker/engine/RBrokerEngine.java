@@ -29,6 +29,8 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.security.*;
+import javax.net.ssl.*;
 
 /*
  * RBrokerEngine
@@ -123,6 +125,49 @@ public abstract class RBrokerEngine implements RBroker {
                                         "/r/server/info?format=json";
             URLConnection urlConn =
                 (new URL(serverInfoEndpoint)).openConnection();
+            HttpsURLConnection trustedConn = null;
+
+            if(brokerConfig.allowSelfSignedSSLCert &&
+                    urlConn instanceof HttpsURLConnection) {
+
+                /*
+                 * Build a temporary TrustManager for this
+                 * /r/server/info call that accepts self-signed SSL
+                 * certificates for the purposes of this endpoint
+                 * validation call.
+                 */
+
+                TrustManager[] selfTrustManager = new TrustManager[] {
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() { 
+                            return null;
+                        } 
+                        public void checkClientTrusted( 
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                        } 
+                        public void checkServerTrusted( 
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+                };
+
+                /*
+                 * Install the custom TrustManager.
+                 */
+                SSLContext sc = SSLContext.getInstance("SSL");
+                sc.init(null, selfTrustManager, new SecureRandom());
+                SSLSocketFactory selfTrustSocketFactory = sc.getSocketFactory();
+                HostnameVerifier selfTrustHostnameVerifier = new HostnameVerifier() {
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                };
+
+                trustedConn = (HttpsURLConnection) urlConn;
+                trustedConn.setSSLSocketFactory(selfTrustSocketFactory);
+                trustedConn.setHostnameVerifier(selfTrustHostnameVerifier);
+
+            }
 
             /*
              * Make endpoint connection, catch handles failure.
@@ -130,7 +175,10 @@ public abstract class RBrokerEngine implements RBroker {
 
             InputStream is = null;
             try {
-                is = urlConn.getInputStream();
+                if(trustedConn != null)
+                    is = trustedConn.getInputStream();
+                else
+                    is = urlConn.getInputStream();
             } finally {
                 if(is != null) {
                     try {
@@ -144,7 +192,8 @@ public abstract class RBrokerEngine implements RBroker {
              * Halt RBroker instance initialization,
              * report invalid DeployR server endpoint.
              */
-           throw new RBrokerException("DeployR endpoint invalid.", ex);
+           throw new RBrokerException("DeployR endpoint invalid=" +
+                                                ex.getMessage(), ex);
         }
     }
 

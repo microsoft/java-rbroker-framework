@@ -58,7 +58,8 @@ public class PooledSimulation {
     public static void main(String[] args) {
 
         log.info("DeployR Endpoint @ " +
-                            System.getProperty("endpoint"));
+            System.getProperty("connection.protocol") +
+                System.getProperty("connection.endpoint"));
         new PooledSimulation();
     }
 
@@ -115,11 +116,16 @@ public class PooledSimulation {
 
             int DEMO6_TARGET_POOL_SIZE = 10;
 
+            String endpoint = System.getProperty("connection.protocol") +
+                    System.getProperty("connection.endpoint");
+            boolean allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
             PooledBrokerConfig brokerConfig =
-                new PooledBrokerConfig(System.getProperty("endpoint"),
+                new PooledBrokerConfig(endpoint,
                                        rAuth,
                                        DEMO6_TARGET_POOL_SIZE,
                                        poolOptions);
+            brokerConfig.allowSelfSignedSSLCert = allowSelfSigned;
 
             log.info("About to create pooledTaskBroker.");
 

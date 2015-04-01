@@ -95,7 +95,8 @@ public class DiscreteTaskWorker implements RBrokerWorker {
             List<URL> generatedFiles = new ArrayList<URL>();
             if (execResult.about().artifacts != null) {
                 for (RProjectFile artifact : execResult.about().artifacts) {
-                    generatedFiles.add(artifact.download());
+                    // generatedFiles.add(artifact.download());
+                    generatedFiles.add(artifact.about().url);
                 }
             }
 
@@ -104,7 +105,8 @@ public class DiscreteTaskWorker implements RBrokerWorker {
             List<URL> storedFiles = new ArrayList<URL>();
             if (execResult.about().repositoryFiles != null) {
                 for (RRepositoryFile repoFile : execResult.about().repositoryFiles) {
-                    storedFiles.add(repoFile.download());
+                    // storedFiles.add(repoFile.download());
+                    storedFiles.add(repoFile.about().url);
                 }
             }
 

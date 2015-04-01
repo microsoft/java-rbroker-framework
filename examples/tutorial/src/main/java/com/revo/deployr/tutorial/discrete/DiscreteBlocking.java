@@ -44,7 +44,8 @@ public class DiscreteBlocking {
     public static void main(String[] args) {
 
         log.info("DeployR Endpoint @ " +
-                            System.getProperty("endpoint"));
+            System.getProperty("connection.protocol") +
+                System.getProperty("connection.endpoint"));
 
         new DiscreteBlocking();
     }
@@ -58,11 +59,14 @@ public class DiscreteBlocking {
              *
              * This example creates a DiscreteTaskBroker.
              */
-
+            String endpoint = System.getProperty("connection.protocol") +
+                                System.getProperty("connection.endpoint");
+            boolean allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
             DiscreteBrokerConfig brokerConfig =
-                new DiscreteBrokerConfig(System.getProperty("endpoint"));
+                    new DiscreteBrokerConfig(endpoint);
+            brokerConfig.allowSelfSignedSSLCert = allowSelfSigned;
             rBroker = RBrokerFactory.discreteTaskBroker(brokerConfig);
-
 
             /*
              * 2. Define RTask

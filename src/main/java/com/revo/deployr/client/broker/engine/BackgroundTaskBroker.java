@@ -50,7 +50,8 @@ public class BackgroundTaskBroker extends RBrokerEngine {
         super((RBrokerConfig) brokerConfig);
 
         this.rClient =
-                RClientFactory.createClient(brokerConfig.deployrEndpoint);
+                RClientFactory.createClient(brokerConfig.deployrEndpoint,
+                                            brokerConfig.allowSelfSignedSSLCert);
 
         this.rUser =
                 rClient.login(brokerConfig.userCredentials);

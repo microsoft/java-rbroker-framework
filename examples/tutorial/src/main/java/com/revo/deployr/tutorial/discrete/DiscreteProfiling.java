@@ -48,8 +48,9 @@ public class DiscreteProfiling {
      */
     public static void main(String[] args) {
 
-        log.debug("DeployR Endpoint @ " +
-                            System.getProperty("endpoint"));
+        log.info("DeployR Endpoint @ " +
+            System.getProperty("connection.protocol") +
+                System.getProperty("connection.endpoint"));
         new DiscreteProfiling();
     }
 
@@ -62,9 +63,13 @@ public class DiscreteProfiling {
              *
              * This example creates a DiscreteTaskBroker.
              */
-
+            String endpoint = System.getProperty("connection.protocol") +
+                                System.getProperty("connection.endpoint");
+            boolean allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
             DiscreteBrokerConfig brokerConfig =
-                new DiscreteBrokerConfig(System.getProperty("endpoint"));
+                    new DiscreteBrokerConfig(endpoint);
+            brokerConfig.allowSelfSignedSSLCert = allowSelfSigned;
             RBroker rBroker = RBrokerFactory.discreteTaskBroker(brokerConfig);
 
             /*

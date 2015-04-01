@@ -42,7 +42,8 @@ public class PooledTaskBroker extends RBrokerEngine {
         super((RBrokerConfig) brokerConfig);
 
         this.rClient =
-                RClientFactory.createClient(brokerConfig.deployrEndpoint);
+                RClientFactory.createClient(brokerConfig.deployrEndpoint,
+                                            brokerConfig.allowSelfSignedSSLCert);
 
         if (brokerConfig.userCredentials != null) {
             this.rUser =
