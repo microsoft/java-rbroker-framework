@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     compile fileTree(dir: '../build/libs', include: ['*.jar'])
-    compile "com.revolutionanalytics.deployr:jDeployR:7.4.3"
+    compile "com.revolutionanalytics.deployr:jDeployR:7.4.5"
     testCompile("junit:junit:4.10")
 }
 
