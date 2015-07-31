@@ -69,6 +69,7 @@ public class ROptionsTranslator {
             options.graphicsHeight = taskOptions.graphicsHeight;
             options.echooff = taskOptions.echooff;
             options.consoleoff = taskOptions.consoleoff;
+            options.artifactsoff = taskOptions.artifactsoff;
             options.routputs = taskOptions.routputs;
             options.encodeDataFramePrimitiveAsVector =
                     taskOptions.encodeDataFramePrimitiveAsVector;
@@ -146,6 +147,7 @@ public class ROptionsTranslator {
             options.graphicsHeight = taskOptions.graphicsHeight;
             options.echooff = taskOptions.echooff;
             options.consoleoff = taskOptions.consoleoff;
+            options.artifactsoff = taskOptions.artifactsoff;
             options.routputs = taskOptions.routputs;
             options.encodeDataFramePrimitiveAsVector =
                     taskOptions.encodeDataFramePrimitiveAsVector;
@@ -242,6 +244,7 @@ public class ROptionsTranslator {
             options.graphicsHeight = taskOptions.graphicsHeight;
             options.echooff = taskOptions.echooff;
             options.consoleoff = taskOptions.consoleoff;
+            options.artifactsoff = taskOptions.artifactsoff;
             options.routputs = taskOptions.routputs;
             options.encodeDataFramePrimitiveAsVector =
                     taskOptions.encodeDataFramePrimitiveAsVector;
