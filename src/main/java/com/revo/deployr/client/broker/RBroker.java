@@ -17,6 +17,7 @@ import com.revo.deployr.client.broker.app.RTaskAppSimulator;
 import com.revo.deployr.client.broker.config.RBrokerConfig;
 
 /**
+ * <p>
  * Represents a high-level programming model for
  * building DeployR-enabled client applications.
  * By using {@link com.revo.deployr.client.broker.RBroker} an
@@ -24,29 +25,26 @@ import com.revo.deployr.client.broker.config.RBrokerConfig;
  * R Analytics, while offloading the complexity
  * of managing client-side API task queues and server-side
  * R session lifecycles.
- * <p/>
+ * </p>
+ * <p>
  * The basic programming model for working with
  * {@link com.revo.deployr.client.broker.RBroker} is as follows:
+ * </p> 
  * <ol>
  * <li>Decide if the R Analytics tasks for your application
  * should execute as:
- * <p/>
  * <ul>
  * <li><b>Discrete tasks:</b> authentication optional, grid resources
  * allocated at runtime, results returned immediately, no persistence.
- * Good for prototyping and public facing production deployments.
- * <p/>
+ * Good for prototyping and public facing production deployments. 
  * <li><b>Pooled tasks:</b> authentication required, grid resources
  * pre-allocated, results returned immediately, optional persistence
  * to repository. Good for enterprise production deployments,
  * consistent runtime, high-throughput environments.
- * <p/>
  * <li><b>Background tasks:</b> authentication required, grid resources
  * allocated at runtime, results persisted for later retrieval. Good
  * for periodic, scheduled or batch processing.
- * <p/>
  * </ul>
- * <p/>
  * <li>Use the {@link com.revo.deployr.client.factory.RBrokerFactory}
  * to create an appropriate instance of
  * {@link com.revo.deployr.client.broker.RBroker}.
@@ -59,7 +57,7 @@ import com.revo.deployr.client.broker.config.RBrokerConfig;
  * <li>Integrate the results of your {@link com.revo.deployr.client.broker.RTask}
  * found within {@link com.revo.deployr.client.broker.RTaskResult}.
  * </ol>
- * <p/>
+ * <p>
  * This programming model can be further simplified for application
  * developers by leveraging asynchronous callbacks. Simply register
  * an {@link com.revo.deployr.client.broker.RTaskListener} with your
@@ -68,25 +66,28 @@ import com.revo.deployr.client.broker.config.RBrokerConfig;
  * {@link com.revo.deployr.client.broker.RTask} completes.
  * This approach allows your application to skip step 5. above
  * and scale effortlessly.
- * <p/>
+ * </p>
  */
 public interface RBroker {
 
     /**
+     * <p>
      * Refresh configuration for
      * {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
+     * <p>
      * Note, support for refresh is only available on the
      * PooledTaskBroker runtime. In addition, only
      * {@link com.revo.deployr.client.broker.options.PoolCreationOptions}
      * are processed on this call. All other RBrokerConfig options are
      * ignored.
-     * <p/>
+     * </p>
+     * <p>
      * A refresh causes all workspace objects and directory files
      * in the underlying R sessions within the pool to be
      * cleared before new workspace objects and/or directory
      * files are loaded per the new config options.
-     * <p/>
+     * </p>
      * Only an idle {@link com.revo.deployr.client.broker.RBroker}
      * instance can be refreshed. An
      * {@link com.revo.deployr.client.broker.RBrokerException}
@@ -107,10 +108,11 @@ public interface RBroker {
             throws RBrokerException;
 
     /**
+     * <p>
      * Submit a priority {@link com.revo.deployr.client.broker.RTask}
      * for execution under the control of
      * {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
      * Priority tasks are automatically moved to the front of the
      * queue, ahead of all standard tasks that are already pending
      * execution by the broker.
@@ -135,12 +137,13 @@ public interface RBroker {
             throws RBrokerException;
 
     /**
+     * <p>
      * Launch an RTaskAppSimulator simulation. The
      * {@link com.revo.deployr.client.broker.RTask} defined
      * by your simulation will be automatically executed by
      * the current instance of
      * {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
      * Make sure to register your
      * {@link com.revo.deployr.client.broker.RTaskListener}
      * and  {@link com.revo.deployr.client.broker.RBrokerListener}
@@ -160,20 +163,23 @@ public interface RBroker {
     public int maxConcurrency();
 
     /**
+     * <p>
      * Returns status indicating current
      * {@link com.revo.deployr.client.broker.RTask}
      * activity on {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
+     * <p>
      * This call can be used to determine if an RBroker instance is
      * idle which can be particularly useful ahead calls to
      * {@link com.revo.deployr.client.broker.RBroker#shutdown}.
-     * <p/>
+     * </p>
+     * <p>
      * The {@link com.revo.deployr.client.broker.RBrokerStatus#pendingTasks}
      * and {@link com.revo.deployr.client.broker.RBrokerStatus#executingTasks}
      * fields can be used by an application to estimate time remaining
      * until {@link com.revo.deployr.client.broker.RBroker} reaches an idle
      * state.
-     * <p/>
+     * </p>
      * The {@link com.revo.deployr.client.broker.RBrokerStatus#isIdle} field
      * is provided for convenience for an application if individual pending
      * and executing task counts are not relevant in
@@ -209,9 +215,10 @@ public interface RBroker {
     public void shutdown();
 
     /**
+     * <p>
      * Returns a token indicating the owner of the current instance of
      * {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
      * For anonymous {@link com.revo.deployr.client.broker.RBroker}
      * instances, null is returned. For authenticated
      * {@link com.revo.deployr.client.broker.RBroker} instances,

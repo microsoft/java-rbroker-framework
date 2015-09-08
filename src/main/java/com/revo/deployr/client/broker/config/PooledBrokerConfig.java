@@ -22,19 +22,22 @@ import com.revo.deployr.client.broker.options.PoolCreationOptions;
 public class PooledBrokerConfig extends RBrokerConfig {
 
     /**
+     * <p>    
      * Specifies the set of pre-initialization operations to be
      * performed on each R Session in the pool at creation time.
-     * <p/>
+     * </p>
+     * <p>     
      * For example, R workspace data, such as R models, can be
      * preloaded into each R Session in the pool at startup.
      * Data files, such as CSV, XLS can be preloaded into the
      * working directory for each R Session in the pool at startup.
-     * <p/>
+     * </p>
+     * <p>     
      * Preloading binary R data or file data at startup ensures
      * the overhead associated with runtime dependencies for each
      * {@link com.revo.deployr.client.broker.RTask} can be kept
      * to a minimum at runtime.
-     * <p/>
+     * </p>
      * Using pool creation options intelligently can greatly help
      * to improve overall {@link com.revo.deployr.client.broker.RTask}
      * throughput on the DeployR server.

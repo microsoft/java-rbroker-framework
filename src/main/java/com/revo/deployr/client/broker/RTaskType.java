@@ -13,9 +13,10 @@
 package com.revo.deployr.client.broker;
 
 /**
+ * <p>
  * Defines the currently supported set of
  * {@link com.revo.deployr.client.broker.RTask}.
- * <p/>
+ * </p>
  * Each {@link com.revo.deployr.client.broker.RTaskResult}
  * identifies it's type on
  * {@link com.revo.deployr.client.broker.RTaskResult#getType}.
