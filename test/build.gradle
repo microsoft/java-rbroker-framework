@@ -15,7 +15,7 @@ dependencies {
 
 test {
     systemProperty "connection.protocol", "http://"
-    systemProperty "connection.endpoint", "localhost:7400/deployr"
+    systemProperty "connection.endpoint", "localhost:8000/deployr"
     systemProperty "allow.SelfSignedSSLCert", "false"
     systemProperty "username", "testuser"
     systemProperty "password", "changeme"
