@@ -57,7 +57,8 @@ public class DiscreteSimulation {
     public static void main(String[] args) {
 
         log.info("DeployR Endpoint @ " +
-                System.getProperty("endpoint"));
+            System.getProperty("connection.protocol") +
+                System.getProperty("connection.endpoint"));
         new DiscreteSimulation();
     }
 
@@ -71,11 +72,14 @@ public class DiscreteSimulation {
              * This example creates an anonymous DiscreteTaskBroker.
              */
 
+            String endpoint = System.getProperty("connection.protocol") +
+                                System.getProperty("connection.endpoint");
+            boolean allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
             DiscreteBrokerConfig brokerConfig =
-                    new DiscreteBrokerConfig(System.getProperty("endpoint"),
-                            null, 5);
+                    new DiscreteBrokerConfig(endpoint, null, 5);
+            brokerConfig.allowSelfSignedSSLCert = allowSelfSigned;
             RBroker rBroker = RBrokerFactory.discreteTaskBroker(brokerConfig);
-
 
             /*
              * 2. Create an instance of RTaskAppSimulator. It will drive

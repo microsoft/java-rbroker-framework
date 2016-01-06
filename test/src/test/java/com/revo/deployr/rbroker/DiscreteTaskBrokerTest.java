@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 public class DiscreteTaskBrokerTest {
 
     String endpoint = null;
+    boolean allowSelfSigned = false;
 
     public DiscreteTaskBrokerTest() {
     }
@@ -43,7 +44,12 @@ public class DiscreteTaskBrokerTest {
     public void setUp() {
         try {
             endpoint = System.getProperty("connection.protocol") +
-                        System.getProperty("connection.endpoint");
+                            System.getProperty("connection.endpoint");
+            if (endpoint == null) {
+                fail("setUp: connection.[protocol|endpoint] null.");
+            }
+            allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
         } catch (Exception ex) {
             fail("setUp: " + ex);
         }
@@ -72,6 +78,7 @@ public class DiscreteTaskBrokerTest {
 
         // Test.
         config = new DiscreteBrokerConfig(endpoint);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -79,6 +86,7 @@ public class DiscreteTaskBrokerTest {
         } catch (Exception ex) {
             exception = ex;
             exceptionMsg = "RBrokerFactory.discreteTaskBroker failed: ";
+            fail("Failed: ex " + ex);
         }
 
         // Test cleanup.
@@ -119,6 +127,7 @@ public class DiscreteTaskBrokerTest {
 
         // Test.
         config = new DiscreteBrokerConfig(DeployRUtil.BAD_ENDPOINT);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -167,6 +176,7 @@ public class DiscreteTaskBrokerTest {
 
         // Test.
         config = new DiscreteBrokerConfig(endpoint);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -244,6 +254,7 @@ public class DiscreteTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new DiscreteBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -319,6 +330,7 @@ public class DiscreteTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      "bad-password-12321");
         config = new DiscreteBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -373,6 +385,7 @@ public class DiscreteTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new DiscreteBrokerConfig(endpoint, rAuth, MAX_CONCURRENCY);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -448,6 +461,7 @@ public class DiscreteTaskBrokerTest {
 
         // Test.
         config = new DiscreteBrokerConfig(endpoint);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -525,6 +539,7 @@ public class DiscreteTaskBrokerTest {
 
         // Test.
         config = new DiscreteBrokerConfig(endpoint);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -606,6 +621,7 @@ public class DiscreteTaskBrokerTest {
         int multipleTaskMaxConcurrency = 10;
         int multipleTaskTestSize = 10;
         config = new DiscreteBrokerConfig(endpoint, null, multipleTaskMaxConcurrency);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -716,6 +732,7 @@ public class DiscreteTaskBrokerTest {
 
         // Test.
         config = new DiscreteBrokerConfig(endpoint);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -799,6 +816,7 @@ public class DiscreteTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new DiscreteBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);
@@ -885,6 +903,7 @@ public class DiscreteTaskBrokerTest {
 
         // Test.
         config = new DiscreteBrokerConfig(endpoint);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.discreteTaskBroker(config);

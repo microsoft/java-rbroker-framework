@@ -42,7 +42,8 @@ public class PooledTaskBroker extends RBrokerEngine {
         super((RBrokerConfig) brokerConfig);
 
         this.rClient =
-                RClientFactory.createClient(brokerConfig.deployrEndpoint);
+                RClientFactory.createClient(brokerConfig.deployrEndpoint,
+                                            brokerConfig.allowSelfSignedSSLCert);
 
         if (brokerConfig.userCredentials != null) {
             this.rUser =
@@ -140,7 +141,7 @@ public class PooledTaskBroker extends RBrokerEngine {
 
     public void callback(RTask task, RTaskResult result) {
 
-        RProject rProject = (RProject) taskResourceTokenMap.get(task);
+        RProject rProject = (RProject) taskResourceTokenMap.remove(task);
 
         /*
          * PooledTaskBroker DeployR Grid Fault Tolerance Handling.

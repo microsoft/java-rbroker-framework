@@ -56,8 +56,8 @@ public class ScoringEngineSimulation implements RTaskListener,
     private static Logger log = Logger.getLogger(ScoringEngineSimulation.class);
 
 
-    private long SIMULATE_TOTAL_TASK_COUNT = 10;
-    private long SIMULATE_TASK_RATE_PER_MINUTE = 0L;
+    private long SIMULATE_TOTAL_TASK_COUNT = 50;
+    private long SIMULATE_TASK_RATE_PER_MINUTE = 500L;  
 
     private final RBroker rBroker;
     public long simulationStartTime = 0L;
@@ -128,10 +128,10 @@ public class ScoringEngineSimulation implements RTaskListener,
 
                         if(SIMULATE_TASK_RATE_PER_MINUTE != 0L) {
 
-                            long staggerLoadInterval =
-                                60L / SIMULATE_TASK_RATE_PER_MINUTE;
+                            long staggerLoadInterval = 
+                                (long)((float)60/SIMULATE_TASK_RATE_PER_MINUTE*1000);
                             Thread.currentThread().sleep(
-                                            staggerLoadInterval * 1000);
+                                            staggerLoadInterval);
                         }
 
                     } catch(InterruptedException iex) {}

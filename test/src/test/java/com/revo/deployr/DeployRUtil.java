@@ -213,7 +213,7 @@ public class DeployRUtil {
                 while (t-- != 0) {
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         break;
                     }

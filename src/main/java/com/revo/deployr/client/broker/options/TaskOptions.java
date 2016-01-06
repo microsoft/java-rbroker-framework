@@ -101,6 +101,14 @@ public class TaskOptions {
     public boolean consoleoff;
 
     /**
+     * [On-execution] When enabled artfiacts generated in the
+     * working directory are not cached in the database and
+     * will not appear in response markup. This control has
+     * no impact on console output on the event stream.
+     */
+    public boolean artifactsoff;
+
+    /**
      * [Post-execution] List of workspace objects to be retrieved
      * from the workspace of the current R session following
      * the execution and returned as DeployR-encoded R objects.

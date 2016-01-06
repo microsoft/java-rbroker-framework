@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 public class PooledTaskBrokerTest {
 
     String endpoint = null;
+    boolean allowSelfSigned = false;
 
     public PooledTaskBrokerTest() {
     }
@@ -43,7 +44,12 @@ public class PooledTaskBrokerTest {
     public void setUp() {
         try {
             endpoint = System.getProperty("connection.protocol") +
-                        System.getProperty("connection.endpoint");
+                            System.getProperty("connection.endpoint");
+            if (endpoint == null) {
+                fail("setUp: connection.[protocol|endpoint] null.");
+            }
+            allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
         } catch (Exception ex) {
             fail("setUp: " + ex);
         }
@@ -76,6 +82,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -127,6 +134,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(DeployRUtil.BAD_ENDPOINT, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -179,6 +187,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -254,6 +263,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      "bad-password-12321");
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -307,6 +317,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth, MAX_CONCURRENCY);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -393,6 +404,7 @@ public class PooledTaskBrokerTest {
                                         rAuth,
                                         MAX_CONCURRENCY,
                                         options);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -482,6 +494,7 @@ public class PooledTaskBrokerTest {
                                         rAuth,
                                         MAX_CONCURRENCY,
                                         options);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -537,6 +550,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -618,6 +632,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -702,6 +717,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth, multipleTaskMaxConcurrency);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -816,6 +832,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -901,6 +918,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -984,6 +1002,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);
@@ -1063,6 +1082,7 @@ public class PooledTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new PooledBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.pooledTaskBroker(config);

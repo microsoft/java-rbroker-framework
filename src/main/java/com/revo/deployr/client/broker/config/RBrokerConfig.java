@@ -93,8 +93,20 @@ public abstract class RBrokerConfig {
      */
     public int maxConcurrentTaskLimit;
 
+    /*
+     * Enable this property if you want to accept connections
+     * to a DeployR server that is using a self-signed
+     * SSL certificate.
+     */
+    public boolean allowSelfSignedSSLCert = false;
+
     public RBrokerConfig(String deployrEndpoint) {
         this(deployrEndpoint, null, 1);
+    }
+
+    public RBrokerConfig(String deployrEndpoint,
+                         boolean allowSelfSignedSSLCert) {
+        this(deployrEndpoint, null, allowSelfSignedSSLCert);
     }
 
     public RBrokerConfig(String deployrEndpoint,
@@ -109,11 +121,34 @@ public abstract class RBrokerConfig {
 
     public RBrokerConfig(String deployrEndpoint,
                          RAuthentication userCredentials,
+                         boolean allowSelfSignedSSLCert) {
+
+        this.deployrEndpoint = deployrEndpoint;
+        this.userCredentials = userCredentials;
+        // Default: single threaded executor,
+        // resulting in serial task execution.
+        this.maxConcurrentTaskLimit = 1;
+        this.allowSelfSignedSSLCert = allowSelfSignedSSLCert;
+    }
+
+    public RBrokerConfig(String deployrEndpoint,
+                         RAuthentication userCredentials,
                          int maxConcurrentTaskLimit) {
 
         this.deployrEndpoint = deployrEndpoint;
         this.userCredentials = userCredentials;
         this.maxConcurrentTaskLimit = maxConcurrentTaskLimit;
+    }
+
+    public RBrokerConfig(String deployrEndpoint,
+                         RAuthentication userCredentials,
+                         int maxConcurrentTaskLimit,
+                         boolean allowSelfSignedSSLCert) {
+
+        this.deployrEndpoint = deployrEndpoint;
+        this.userCredentials = userCredentials;
+        this.maxConcurrentTaskLimit = maxConcurrentTaskLimit;
+        this.allowSelfSignedSSLCert = allowSelfSignedSSLCert;
     }
 
 }

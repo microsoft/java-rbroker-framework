@@ -50,7 +50,8 @@ public class BackgroundTaskBroker extends RBrokerEngine {
         super((RBrokerConfig) brokerConfig);
 
         this.rClient =
-                RClientFactory.createClient(brokerConfig.deployrEndpoint);
+                RClientFactory.createClient(brokerConfig.deployrEndpoint,
+                                            brokerConfig.allowSelfSignedSSLCert);
 
         this.rUser =
                 rClient.login(brokerConfig.userCredentials);
@@ -92,7 +93,7 @@ public class BackgroundTaskBroker extends RBrokerEngine {
 
     public void callback(RTask task, RTaskResult result) {
 
-        Integer resourceToken = (Integer) taskResourceTokenMap.get(task);
+        Integer resourceToken = (Integer) taskResourceTokenMap.remove(task);
 
         if (resourceToken != null) {
             boolean added = resourceTokenPool.add(resourceToken);

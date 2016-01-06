@@ -4,17 +4,19 @@ apply plugin: 'application'
 sourceCompatibility = "1.6"
 targetCompatibility = "1.6"
 
-applicationDefaultJvmArgs = ["-Dendpoint=http://localhost:7400/deployr",
-                             "-Dusername=testuser",
-                             "-Dpassword=changeme"]
-
+applicationDefaultJvmArgs = [ "-Dconnection.protocol=http://",
+                              "-Dconnection.endpoint=localhost:8000/deployr",
+                              "-Dallow.SelfSignedSSLCert=false",
+                              "-Dusername=testuser",
+                              "-Dpassword=TESTUSER_PASSWORD"]
+                             
 repositories {
     mavenCentral()
 }
 
 dependencies {
     compile fileTree(dir: '../../build/libs', include: ['*.jar'])
-    compile "com.revolutionanalytics.deployr:jDeployR:7.4.1"
+    compile "com.revolutionanalytics.deployr:jDeployR:7.4.8"
 }
 
 jar {

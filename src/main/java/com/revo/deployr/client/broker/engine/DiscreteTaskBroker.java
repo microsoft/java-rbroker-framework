@@ -43,7 +43,8 @@ public class DiscreteTaskBroker extends RBrokerEngine {
         super((RBrokerConfig) brokerConfig);
 
         this.rClient =
-                RClientFactory.createClient(brokerConfig.deployrEndpoint);
+                RClientFactory.createClient(brokerConfig.deployrEndpoint,
+                                            brokerConfig.allowSelfSignedSSLCert);
 
         if (brokerConfig.userCredentials != null) {
             this.rUser =
@@ -96,7 +97,7 @@ public class DiscreteTaskBroker extends RBrokerEngine {
 
     public void callback(RTask task, RTaskResult result) {
 
-        Integer resourceToken = (Integer) taskResourceTokenMap.get(task);
+        Integer resourceToken = (Integer) taskResourceTokenMap.remove(task);
 
         if (resourceToken != null) {
             boolean added = resourceTokenPool.add(resourceToken);

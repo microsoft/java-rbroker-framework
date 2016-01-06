@@ -47,7 +47,8 @@ public class DiscreteAsynchronous {
     public static void main(String[] args) {
 
         log.info("DeployR Endpoint @ " +
-                System.getProperty("endpoint"));
+            System.getProperty("connection.protocol") +
+                System.getProperty("connection.endpoint"));
         new DiscreteAsynchronous();
     }
 
@@ -61,8 +62,13 @@ public class DiscreteAsynchronous {
              * This example creates a DiscreteTaskBroker.
              */
 
+            String endpoint = System.getProperty("connection.protocol") +
+                                System.getProperty("connection.endpoint");
+            boolean allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
             DiscreteBrokerConfig brokerConfig =
-                    new DiscreteBrokerConfig(System.getProperty("endpoint"));
+                    new DiscreteBrokerConfig(endpoint);
+            brokerConfig.allowSelfSignedSSLCert = allowSelfSigned;
             RBroker rBroker = RBrokerFactory.discreteTaskBroker(brokerConfig);
 
             /*

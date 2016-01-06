@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 public class BackgroundTaskBrokerTest {
 
     String endpoint = null;
+    boolean allowSelfSigned = false;
 
     public BackgroundTaskBrokerTest() {
     }
@@ -43,7 +44,12 @@ public class BackgroundTaskBrokerTest {
     public void setUp() {
         try {
             endpoint = System.getProperty("connection.protocol") +
-                        System.getProperty("connection.endpoint");
+                            System.getProperty("connection.endpoint");
+            if (endpoint == null) {
+                fail("setUp: connection.[protocol|endpoint] null.");
+            }
+            allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
         } catch (Exception ex) {
             fail("setUp: " + ex);
         }
@@ -76,6 +82,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -127,6 +134,8 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(DeployRUtil.BAD_ENDPOINT, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -182,6 +191,8 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -274,6 +285,8 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      "bad-password-12321");
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -330,6 +343,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -430,6 +444,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -531,6 +546,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -668,6 +684,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -769,6 +786,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -869,6 +887,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);
@@ -968,6 +987,7 @@ public class BackgroundTaskBrokerTest {
             new RBasicAuthentication(System.getProperty("username"),
                                      System.getProperty("password"));
         config = new BackgroundBrokerConfig(endpoint, rAuth);
+        config.allowSelfSignedSSLCert = allowSelfSigned;
 
         try {
             rBroker = RBrokerFactory.backgroundTaskBroker(config);

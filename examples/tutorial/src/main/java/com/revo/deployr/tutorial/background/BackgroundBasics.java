@@ -54,7 +54,8 @@ public class BackgroundBasics {
     public static void main(String[] args) {
 
         log.info("DeployR Endpoint @ " +
-                System.getProperty("endpoint"));
+            System.getProperty("connection.protocol") +
+                System.getProperty("connection.endpoint"));
         new BackgroundBasics();
     }
 
@@ -71,10 +72,15 @@ public class BackgroundBasics {
             RAuthentication rAuth =
                     new RBasicAuthentication(System.getProperty("username"),
                             System.getProperty("password"));
+            String endpoint = System.getProperty("connection.protocol") +
+                                System.getProperty("connection.endpoint");
+            boolean allowSelfSigned = 
+                Boolean.valueOf(System.getProperty("allow.SelfSignedSSLCert"));
 
             BackgroundBrokerConfig brokerConfig =
-                    new BackgroundBrokerConfig(System.getProperty("endpoint"),
-                            rAuth);
+                    new BackgroundBrokerConfig(endpoint, rAuth);
+            brokerConfig.allowSelfSignedSSLCert = allowSelfSigned;
+
             RBroker rBroker =
                     RBrokerFactory.backgroundTaskBroker(brokerConfig);
 
