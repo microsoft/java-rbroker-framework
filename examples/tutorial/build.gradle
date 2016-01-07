@@ -5,10 +5,10 @@ sourceCompatibility = "1.6"
 targetCompatibility = "1.6"
 
 applicationDefaultJvmArgs = [ "-Dconnection.protocol=http://",
-                              "-Dconnection.endpoint=localhost:7400/deployr",
+                              "-Dconnection.endpoint=localhost:8000/deployr",
                               "-Dallow.SelfSignedSSLCert=false",
                               "-Dusername=testuser",
-                              "-Dpassword=changeme"]
+                              "-Dpassword=TESTUSER_PASSWORD"]
                              
 repositories {
     mavenCentral()
@@ -21,7 +21,7 @@ dependencies {
 
 jar {
     baseName = 'rbroker-tutorial'
-    version =  '7.4.0'
+    version =  '8.0.0'
 }
 
 task execute(type:JavaExec) {

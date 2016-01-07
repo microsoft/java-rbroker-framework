@@ -1,7 +1,7 @@
 /*
  * RTaskResult.java
  *
- * Copyright (C) 2010-2014 by Revolution Analytics Inc.
+ * Copyright (C) 2010-2016, Microsoft Corporation
  *
  * This program is licensed to you under the terms of Version 2.0 of the
  * Apache License. This program is distributed WITHOUT
@@ -24,8 +24,9 @@ import java.util.List;
 public interface RTaskResult {
 
     /**
+     * <p>
      * Task DeployR identifier.
-     * <p/>
+     * </p>
      * Maps to a project execution or job identifier.
      */
     public String getID();

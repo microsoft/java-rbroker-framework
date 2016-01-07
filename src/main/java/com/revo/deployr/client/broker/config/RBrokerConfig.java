@@ -1,7 +1,7 @@
 /*
  * RBrokerConfig.java
  *
- * Copyright (C) 2010-2014 by Revolution Analytics Inc.
+ * Copyright (C) 2010-2016, Microsoft Corporation
  *
  * This program is licensed to you under the terms of Version 2.0 of the
  * Apache License. This program is distributed WITHOUT
@@ -29,17 +29,19 @@ public abstract class RBrokerConfig {
     public static final int MAX_CONCURRENCY = 999;
 
     /**
+     * <p>    
      * Specifies the HTTP URL endpoint for a DeployR Server instance.
-     * <p/>
+     * </p>
      * For example: http://dserver:dport/deployr
      */
     public final String deployrEndpoint;
 
     /**
+     * <p>    
      * Specifies the basic authentication user credentials for
      * an authenticated instance of an
      * {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
      * An authenticated instance of an
      * {@link com.revo.deployr.client.broker.RBroker} should be
      * used when you want {@link com.revo.deployr.client.broker.RTask}
@@ -49,29 +51,34 @@ public abstract class RBrokerConfig {
     public final RAuthentication userCredentials;
 
     /**
+     * <p>    
      * Specifies the task execution concurrency levels requested for
      * an instance of an {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
+     * <p>
      * Specifying a value of 1 will result in serial execution for
      * all tasks submitted to the
      * {@link com.revo.deployr.client.broker.RBroker}.
-     * <p/>
+     * </p>
+     * <p>     
      * Specifying a value greater than 1 will result in concurrent
      * execution for tasks submitted to the
      * {@link com.revo.deployr.client.broker.RBroker}. In all cases,
      * up to maxConcurrentTaskLimit
      * {@link com.revo.deployr.client.broker.RTask} will execute
      * concurrently.
-     * <p/>
+     * </p>
+     * <p>     
      * Regardless of what task execution concurrency level you use
      * the execution of tasks will always proceed in a FIFO order.
-     * <p/>
+     * </p>
+     * <p>     
      * Regardless of the concurrency levels requested when creating an
      * instance of {@link com.revo.deployr.client.broker.RBroker}, a
      * combination of DeployR Server Policies and available DeployR Grid
      * resources determine the actual task throughput that will be
      * achieved on the DeployR server.
-     * <p/>
+     * </p>
      * Where an instance
      * of an {@link com.revo.deployr.client.broker.RBroker} has been
      * configured for concurrency levels in excess of those supported by

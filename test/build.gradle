@@ -18,7 +18,7 @@ test {
     systemProperty "connection.endpoint", "localhost:8000/deployr"
     systemProperty "allow.SelfSignedSSLCert", "false"
     systemProperty "username", "testuser"
-    systemProperty "password", "changeme"
+    systemProperty "password", "TESTUSER_PASSWORD"
 }
 
 task wrapper(type: Wrapper) {

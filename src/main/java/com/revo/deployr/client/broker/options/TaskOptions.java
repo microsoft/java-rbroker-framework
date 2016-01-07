@@ -1,7 +1,7 @@
 /*
  * TaskOptions.java
  *
- * Copyright (C) 2010-2014 by Revolution Analytics Inc.
+ * Copyright (C) 2010-2016, Microsoft Corporation
  *
  * This program is licensed to you under the terms of Version 2.0 of the
  * Apache License. This program is distributed WITHOUT
@@ -33,10 +33,11 @@ public class TaskOptions {
     public List<RData> rinputs;
 
     /**
+     * <p>
      * [Pre-execution] Comma-seperated list of primitive R object names
      * and values, to be added to the workspace of the current R session
      * prior to the execution.
-     * <p/>
+     * </p>
      * eg. csvrinputs=name,George,age,45
      */
     public String csvrinputs;
@@ -56,11 +57,12 @@ public class TaskOptions {
     public TaskPreloadOptions preloadDirectory;
 
     /**
+     * <p>
      * [Pre-execution] Preload by directory option allows the
      * loading of all files from one or more repository-managed
      * directories into the working directory of the current R session
      * prior to execution.
-     * <p/>
+     * </p>
      * When loading the contents of more than one directory,
      * use a comma-separated list of directory names.
      */
@@ -114,10 +116,11 @@ public class TaskOptions {
     public List<String> routputs;
 
     /**
+     * <p>
      * [Post-execution] Workspace data.frame object encoding
      * preference when retrieving R objects from the current
      * R session following a Task execution.
-     * <p/>
+     * <p>
      * This option works in conjunction with the robjects property
      * on this class. The default DeployR-encoding is to encode
      * primatives inside data.frame objects as primitives,
@@ -140,11 +143,12 @@ public class TaskOptions {
     public String infinity;
 
     /**
+     * <p>
      * [Post-execution] Repository storage options allow the storage
      * of one-or-more workspace objects, the entire workspace
      * and/or one-or-more working directory files from the
      * current R session into the repository following the execution.
-     * <p/>
+     * </p>
      * Storage options are only available to Tasks executing
      * on behalf of AUTHENTICATED users. Tasks executing on behalf
      * of ANONYMOUS users can not store data to the repository.

@@ -1,7 +1,7 @@
 /*
  * PoolCreationOptions.java
  *
- * Copyright (C) 2010-2014 by Revolution Analytics Inc.
+ * Copyright (C) 2010-2016, Microsoft Corporation
  *
  * This program is licensed to you under the terms of Version 2.0 of the
  * Apache License. This program is distributed WITHOUT
@@ -37,11 +37,12 @@ public class PoolCreationOptions {
     public PoolPreloadOptions preloadWorkspace;
 
     /**
+     * <p>    
      * Preload by directory option allows the
      * loading of all files from one or more repository-managed
      * directories into the working directory into the working
      * directory of each R session in the pool on pool initialization.
-     * <p/>
+     * </p>
      * When loading the contents of more than one directory,
      * use a comma-separated list of directory names.
      */
@@ -55,10 +56,11 @@ public class PoolCreationOptions {
     public List<RData> rinputs;
 
     /**
+     * <p>
      * ReleaseGridResources when enabled causes all live grid
      * resources held by the user to be released before the new pool
      * is created.
-     * <p/>
+     * </p>
      * This is particularly useful if your client application needs to
      * create a new pool having lost its connection to an original pool.
      * For example, due to a network connection failure between your

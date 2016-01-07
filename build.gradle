@@ -14,7 +14,7 @@ dependencies {
 
 jar {
     baseName = 'jRBroker'
-    version =  '7.4.8'
+    version =  '8.0.0'
 }
 
 javadoc {
