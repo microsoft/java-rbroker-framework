@@ -12,9 +12,9 @@ sophisticated solutions such as high throughput, realtime scoring engines.
 Links
 -----
 
-  * [Download](http://deployr.revolutionanalytics.com/docanddown/#rbroker)
-  * [Quick Start Tutorial](http://deployr.revolutionanalytics.com/documents/dev/rbroker)
-  * [Framework API JavaDoc](http://deployr.revolutionanalytics.com/documents/dev/rbroker-javadoc)
+  * [Download](https://github.com/Microsoft/java-rbroker-framework/releases)
+  * [Quick Start Tutorial](https://msdn.microsoft.com/en-us/microsoft-r/deployr-rbroker-framework)
+  * [Framework API JavaDoc](http://microsoft.github.io/java-rbroker-framework/)
   * [Framework Dependencies](#dependencies)
   * [Example Code](#examples)
   * [License](#license)
@@ -46,7 +46,7 @@ directly on your application CLASSPATH.
 
 Besides the DeployR Java RBroker Framework JAR itself, `jRBroker-<version>.jar`,
 the framework depends on the
-[DeployR Java Client Library](https://github.com/deployr/java-client-library)
+[DeployR Java Client Library](https://github.com/microsoft/java-client-library)
 and all of it's third party JAR dependencies.
 
 Building the Java RBroker Framework
@@ -83,7 +83,7 @@ Examples
 
 The DeployR Java RBroker Framework ships with a number of sample applications
 provided to demonstrate some of the key featues introduced by the
-[Quick Start Tutorial](http://deployr.revolutionanalytics.com/documents/dev/rbroker)
+[Quick Start Tutorial](https://msdn.microsoft.com/en-us/microsoft-r/deployr-rbroker-framework)
 for the Java client library. See
 [here](examples/tutorial) for details.
 
