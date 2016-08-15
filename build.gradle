@@ -1,4 +1,11 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+ext.isRelease = false
+group = 'com.microsoft.deployr'
+archivesBaseName = 'java-rbroker-framework'
+version = '8.0.6'
 
 sourceCompatibility = "1.6"
 targetCompatibility = "1.6"
@@ -9,12 +16,12 @@ repositories {
 
 dependencies {
     compile fileTree(dir: '../build/libs', include: ['*.jar'])
-    compile "com.microsoft.deployr:jDeployR:8.0.5"
+    compile "com.microsoft.deployr:jDeployR:8.0.6"
 }
 
 jar {
     baseName = 'jRBroker'
-    version =  '8.0.5'
+    version =  '8.0.6'
 }
 
 javadoc {
@@ -39,4 +46,61 @@ task javadocJar(type: Jar) {
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
+}
+
+artifacts {
+    if (isRelease) { 
+        archives javadocJar, sourcesJar 
+    } else {
+        println (':artifacts SKIPPED')
+    }
+}
+
+signing {
+    required { isRelease } 
+    sign configurations.archives
+}
+
+uploadArchives {
+  if (isRelease) {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        pom.project {
+          name 'jRBroker'
+          packaging 'jar'
+          description 'DeployR RBroker Framework'
+          url 'https://github.com/Microsoft/java-rbroker-framework'
+
+          scm {
+            connection 'scm:git://github.com/Microsoft/java-rbroker-framework.git'
+            developerConnection 'scm:git://github.com/Microsoft/java-rbroker-framework.git'
+            url 'https://github.com/Microsoft/java-rbroker-framework'
+          }
+
+          licenses {
+            license {
+              name 'The Apache License, Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+          }
+
+          developers {
+            developer { /* ADD */ }              
+          }
+        }
+      }
+    }
+  } else {
+    println (':uploadArchives SKIPPED')
+  }
 }
